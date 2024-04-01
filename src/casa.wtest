@@ -1,0 +1,10 @@
+import casa.*
+
+test "**Caso de Prueba**: se rompe algo de $1000, aumentando el monto de reparación. 
+		Se verifica que la casa: tiene víveres suficientes, hay que hacer reparaciones
+		y no está en orden" {
+	casaDePepeYJulian.aumentarMontoDeReparacion(1000)
+	assert.that(casaDePepeYJulian.tieneViveresSuficientes())
+	assert.that(casaDePepeYJulian.hayQueReparar())
+	assert.that(not casaDePepeYJulian.laCasaEstaEnOrden())
+}
