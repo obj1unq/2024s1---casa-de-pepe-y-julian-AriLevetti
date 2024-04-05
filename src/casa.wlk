@@ -1,9 +1,10 @@
 object casaDePepeYJulian {
 
 	var viveres = 50
-	var dineroParaReparaciones = 0
 	var montoReparacion = 0
 	var cuentaDeLaCasa = corriente
+	var property estrategiaDeAhorro = full
+	var property calidadDeViveres = 1
 
 	method aumentarMontoDeReparacion(monto) {
 		montoReparacion += monto
@@ -19,6 +20,10 @@ object casaDePepeYJulian {
 
 	method viveres() {
 		return viveres
+	}
+
+	method aumentarViveres(nuevaCantidad) {
+		viveres += nuevaCantidad
 	}
 
 	method tieneViveresSuficientes() {
@@ -39,6 +44,22 @@ object casaDePepeYJulian {
 
 	method cuentaDeLaCasa() {
 		return cuentaDeLaCasa
+	}
+
+	method saldoCuentaDeLaCasa() {
+		return cuentaDeLaCasa.saldo()
+	}
+
+	method gastar() {
+		cuentaDeLaCasa.extraerDinero(montoReparacion)
+	}
+
+	method nuevoGastoDeLaCasa(tipoDeGasto) {
+		self.aumentarMontoDeReparacion(tipoDeGasto.costo())
+	}
+
+	method mantenimiento() {
+		estrategiaDeAhorro.procedimiento()
 	}
 
 }
@@ -91,7 +112,6 @@ object conGastos {
 
 object combinada {
 
-	var saldo = 0
 	var primaria = corriente
 	var secundaria = corriente
 
@@ -132,6 +152,99 @@ object combinada {
 			primaria.extraerDinero(dinero)
 		} else {
 			secundaria.extraerDinero(dinero)
+		}
+	}
+
+}
+
+//Tipo de Gastos
+object estructura {
+
+	method costo() {
+		return 1000
+	}
+
+}
+
+object jardin {
+
+	method costo() {
+		return 500
+	}
+
+}
+
+object muebles {
+
+	method costo() {
+		return 100
+	}
+
+}
+
+//Estrategias de ahorro
+object minimoEIndispensable {
+
+	var property casa = casaDePepeYJulian
+
+	method procedimiento() {
+		if (not casa.tieneViveresSuficientes()) {
+			self.viveresAl40()
+		}
+	}
+
+	method viveresAl40() {
+		casa.gastar(self.monto())
+		casa.viveres(40)
+	}
+
+	method monto() {
+		return (40 - casa.viveres()) * casa.calidadDeViveres()
+	}
+
+}
+
+object full {
+
+	var property casa = casaDePepeYJulian
+	const calidad = 5
+	var correspondeMantenimiento = false
+
+	method procedimiento() {
+		if (casa.laCasaEstaEnOrden()) {
+			self.viveresAl100()
+		} else {
+			self.viveresAumentan40()
+		}
+	}
+
+	method viveresAl100() {
+		casa.gastar(self.montoAl100())
+		casa.viveres(100)
+	}
+
+	method viveresAumentan40() {
+		casa.gastar(self.monto40())
+		casa.aumentarViveres(40)
+	}
+
+	method montoAl100() {
+		return (100 - casa.viveres()) * calidad
+	}
+
+	method monto40() {
+		return 40 * calidad
+	}
+
+	method hacerMantenimiento() {
+		if (correspondeMantenimiento) {
+			casa.gastar()
+		}
+	}
+
+	method correspondeMantenimiento() {
+		if (casa.saldoCuentaDeLaCasa() - casa.montoReparacion() >= 1000) {
+			correspondeMantenimiento = true
 		}
 	}
 
