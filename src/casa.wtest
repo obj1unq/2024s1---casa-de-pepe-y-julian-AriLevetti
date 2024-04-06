@@ -29,5 +29,26 @@ describe "casa" {
 		assert.equals(350, combinada.saldo())
 	}
 
+	test "**Caso de Prueba**: Si la casa tiene 50% de los víveres, necesita 100 pesos 
+		para reparaciones, tiene asociada la cuenta corriente con 1000 pesos de saldo 
+		y una estrategia de ahorro _Full_. Al hacer un mantenimiento de la casa:
+		> - Como la casa no está en orden, aumenta 40% de sus víveres gastando `40 * 5 = 200` pesos.
+		> - Si bien luego les alcanza para hacer las reparaciones, no sobrarían 1000 pesos, 
+			así que no se hacen.
+		> - _Verificar_ que la casa queda con 90% de víveres, mantiene los 100 pesos para reparaciones, 
+			y la cuenta corriente queda con 800 pesos." {
+		casaDePepeYJulian.viveres(50)
+		casaDePepeYJulian.nuevoGastoDeLaCasa(muebles)
+		casaDePepeYJulian.cuentaDeLaCasa(corriente)
+		corriente.depositarDinero(1000)
+		casaDePepeYJulian.estrategiaDeAhorro(full)
+		casaDePepeYJulian.mantenimiento()
+		assert.equals(200, full.monto())
+		assert.that(not full.correspondeMantenimiento())
+		assert.equals(90, casaDePepeYJulian.viveres())
+		assert.equals(100, casaDePepeYJulian.montoReparacion())
+		assert.equals(800, casaDePepeYJulian.saldoCuentaDeLaCasa())
+	}
+
 }
 

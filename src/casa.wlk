@@ -50,8 +50,8 @@ object casaDePepeYJulian {
 		return cuentaDeLaCasa.saldo()
 	}
 
-	method gastar() {
-		cuentaDeLaCasa.extraerDinero(montoReparacion)
+	method gastar(monto) {
+		cuentaDeLaCasa.extraerDinero(monto)
 	}
 
 	method nuevoGastoDeLaCasa(tipoDeGasto) {
@@ -208,7 +208,6 @@ object full {
 
 	var property casa = casaDePepeYJulian
 	const calidad = 5
-	var correspondeMantenimiento = false
 
 	method procedimiento() {
 		if (casa.laCasaEstaEnOrden()) {
@@ -219,33 +218,31 @@ object full {
 	}
 
 	method viveresAl100() {
-		casa.gastar(self.montoAl100())
+		casa.gastar(self.monto())
 		casa.viveres(100)
 	}
 
 	method viveresAumentan40() {
-		casa.gastar(self.monto40())
+		casa.gastar(self.monto())
 		casa.aumentarViveres(40)
 	}
 
-	method montoAl100() {
-		return (100 - casa.viveres()) * calidad
-	}
-
-	method monto40() {
-		return 40 * calidad
+	method monto() {
+		return if (casa.laCasaEstaEnOrden()) {
+			(100 - casa.viveres()) * calidad
+		} else {
+			40 * calidad
+		}
 	}
 
 	method hacerMantenimiento() {
-		if (correspondeMantenimiento) {
-			casa.gastar()
+		if (self.correspondeMantenimiento()) {
+			casa.gastar(casa.montoReparacion())
 		}
 	}
 
 	method correspondeMantenimiento() {
-		if (casa.saldoCuentaDeLaCasa() - casa.montoReparacion() >= 1000) {
-			correspondeMantenimiento = true
-		}
+		return (casa.saldoCuentaDeLaCasa() - casa.montoReparacion()) >= 1000
 	}
 
 }
